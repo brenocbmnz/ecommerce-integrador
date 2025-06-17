@@ -42,6 +42,7 @@ const createProduct = async (req, res) => {
             price: req.body.price,
             imageUrl: req.body.imageUrl,
             description: req.body.description,
+            stock: req.body.stock || 10, // Add stock field with default value of 10
         });
 
         const savedProduct = await newProduct.save();

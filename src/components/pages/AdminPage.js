@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// CORREÇÃO: O caminho do import foi corrigido para apontar para o diretório correto.
 import ProductForm from '../admin/ProductForm';
 
 // Uma API simples para encapsular as chamadas fetch
@@ -22,7 +21,7 @@ const api = {
 
 const AdminPage = () => {
     const [products, setProducts] = useState([]);
-    const [editingProduct, setEditingProduct] = useState(null); // Guarda o produto a ser editado
+    const [editingProduct, setEditingProduct] = useState(null);
     const [isFormVisible, setIsFormVisible] = useState(false);
 
     useEffect(() => {
@@ -31,7 +30,8 @@ const AdminPage = () => {
 
     const loadProducts = async () => {
         const data = await api.getProducts();
-        setProducts(data);
+        // Ordena os produtos por ID para uma visualização consistente
+        setProducts(data.sort((a, b) => a.id - b.id));
     };
 
     const handleEdit = (product) => {
@@ -40,10 +40,9 @@ const AdminPage = () => {
     };
 
     const handleDelete = async (id) => {
-        // Usamos window.confirm para uma confirmação simples do navegador
         if (window.confirm('Tem certeza que deseja excluir este produto?')) {
             await api.deleteProduct(id);
-            loadProducts(); // Recarrega a lista após excluir
+            loadProducts();
         }
     };
 
@@ -53,7 +52,7 @@ const AdminPage = () => {
         } else {
             await api.createProduct(productData);
         }
-        loadProducts(); // Recarrega a lista após salvar
+        loadProducts();
         setIsFormVisible(false);
         setEditingProduct(null);
     };
@@ -93,6 +92,7 @@ const AdminPage = () => {
                                 <th className="p-4">ID</th>
                                 <th className="p-4">Nome</th>
                                 <th className="p-4">Preço</th>
+                                <th className="p-4">Estoque</th> {/* Coluna de estoque adicionada */}
                                 <th className="p-4">Ações</th>
                             </tr>
                         </thead>
@@ -102,6 +102,7 @@ const AdminPage = () => {
                                     <td className="p-4">{product.id}</td>
                                     <td className="p-4">{product.name}</td>
                                     <td className="p-4">${product.price.toFixed(2)}</td>
+                                    <td className="p-4">{product.stock}</td> {/* Campo de estoque adicionado */}
                                     <td className="p-4">
                                         <button onClick={() => handleEdit(product)} className="text-sm bg-green-500 text-white px-3 py-1 rounded-md mr-2 hover:bg-green-600">Editar</button>
                                         <button onClick={() => handleDelete(product.id)} className="text-sm bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600">Excluir</button>

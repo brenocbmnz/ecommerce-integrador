@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
 
 const ProductForm = ({ product, onSave, onCancel }) => {
+    // Estado inicial do formulário agora inclui o campo 'stock'
     const [formData, setFormData] = useState({
         name: '',
         category: '',
         price: '',
         imageUrl: '',
-        description: ''
+        description: '',
+        stock: ''
     });
 
     useEffect(() => {
-        // Se um produto for passado (modo de edição), preenche o formulário
         if (product) {
+            // Se estiver editando, preenche o formulário com os dados do produto
             setFormData(product);
         } else {
-            // Se não (modo de criação), reseta o formulário
-            setFormData({ name: '', category: '', price: '', imageUrl: '', description: '' });
+            // Se estiver criando, reseta o formulário com um valor padrão para o estoque
+            setFormData({ name: '', category: '', price: '', imageUrl: '', description: '', stock: '10' });
         }
     }, [product]);
 
@@ -47,13 +49,18 @@ const ProductForm = ({ product, onSave, onCancel }) => {
                     {/* Campo Preço */}
                     <div>
                         <label htmlFor="price" className="block text-sm font-medium text-gray-700">Preço</label>
-                        <input type="number" name="price" id="price" value={formData.price} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required />
+                        <input type="number" name="price" id="price" value={formData.price} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required step="0.01" />
                     </div>
-                    {/* Campo URL da Imagem */}
+                    {/* Campo Estoque */}
                     <div>
-                        <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700">URL da Imagem</label>
-                        <input type="text" name="imageUrl" id="imageUrl" value={formData.imageUrl} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required />
+                        <label htmlFor="stock" className="block text-sm font-medium text-gray-700">Estoque</label>
+                        <input type="number" name="stock" id="stock" value={formData.stock} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required />
                     </div>
+                </div>
+                {/* Campo URL da Imagem */}
+                <div className="mt-6">
+                    <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700">URL da Imagem</label>
+                    <input type="text" name="imageUrl" id="imageUrl" value={formData.imageUrl} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required />
                 </div>
                 {/* Campo Descrição */}
                 <div className="mt-6">
