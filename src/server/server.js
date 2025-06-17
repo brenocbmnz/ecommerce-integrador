@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const productRoutes = require('./routes/productRoutes');
+const authRoutes = require('./routes/authRoutes');
+const orderRoutes = require('./routes/orderRoutes');// Importar as novas rotas de pedidos
 
 // Initialize Express App
 const app = express();
@@ -10,12 +12,13 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors()); // Enable Cross-Origin Resource Sharing
-app.use(express.json()); // To parse JSON bodies
+app.use(cors());
+app.use(express.json());
 
 // API Routes
-// Use the productRoutes for any request to /api
 app.use('/api', productRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/orders', orderRoutes); // Usar as rotas de pedidos
 
 // Root route for simple testing
 app.get('/', (req, res) => {

@@ -20,7 +20,7 @@ Original Description: ${product.description}`;
             let chatHistory = [];
             chatHistory.push({ role: "user", parts: [{ text: prompt }] });
             const payload = { contents: chatHistory };
-            const apiKey = ""; // Will be provided by the environment
+            const apiKey = ""; // Será fornecida pelo ambiente
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
             const response = await fetch(apiUrl, {
@@ -30,7 +30,7 @@ Original Description: ${product.description}`;
             });
 
             if (!response.ok) {
-                throw new Error(`API request failed with status ${response.status}`);
+                throw new Error(`A requisição da API falhou com o status ${response.status}`);
             }
 
             const result = await response.json();
@@ -41,11 +41,11 @@ Original Description: ${product.description}`;
                 const text = result.candidates[0].content.parts[0].text;
                 setAiDescription(text);
             } else {
-                throw new Error("Invalid response structure from API.");
+                throw new Error("Estrutura de resposta inválida da API.");
             }
         } catch (err) {
-            console.error("Error calling Gemini API:", err);
-            setError("Sorry, we couldn't generate a new description right now. Please try again later.");
+            console.error("Erro ao chamar a API Gemini:", err);
+            setError("Desculpe, não conseguimos gerar uma nova descrição no momento. Por favor, tente novamente mais tarde.");
         } finally {
             setIsLoading(false);
         }
@@ -53,7 +53,7 @@ Original Description: ${product.description}`;
 
     return (
         <div className="container mx-auto px-6 py-12">
-            <button onClick={onBack} className="mb-8 text-gray-600 hover:text-gray-900">&larr; Back to shop</button>
+            <button onClick={onBack} className="mb-8 text-gray-600 hover:text-gray-900">&larr; Voltar para a loja</button>
             <div className="flex flex-col md:flex-row -mx-4">
                 <div className="md:flex-1 px-4">
                     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -62,13 +62,17 @@ Original Description: ${product.description}`;
                 </div>
                 <div className="md:flex-1 px-4 mt-8 md:mt-0">
                     <h2 className="text-4xl font-bold text-gray-800 mb-2">{product.name}</h2>
-                    <p className="text-gray-500 text-sm mb-4">{product.category}</p>
+                    <p className="text-gray-500 text-sm mb-2">{product.category}</p>
+                    {/* Exibe o estoque do produto */}
+                    <p className="text-gray-600 text-sm mb-4 font-semibold">Em estoque: {product.stock}</p>
+
                     <div className="flex mb-4">
                         <span className="text-3xl font-bold text-gray-900">${product.price.toFixed(2)}</span>
                     </div>
+
                     <p className="text-gray-600 mb-6">{aiDescription || product.description}</p>
 
-                    {/* Gemini API Feature */}
+                    {/* Funcionalidade da API Gemini */}
                     <div className="mb-6">
                         <button
                             onClick={generateDescription}
@@ -81,10 +85,10 @@ Original Description: ${product.description}`;
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
-                                    Generating...
+                                    Gerando...
                                 </>
                             ) : (
-                                "✨ Generate a New Description"
+                                "✨ Gerar nova descrição"
                             )}
                         </button>
                         {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
@@ -92,9 +96,10 @@ Original Description: ${product.description}`;
 
                     <button
                         onClick={() => onAddToCart(product)}
-                        className="w-full bg-gray-800 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-700 transition duration-300"
+                        disabled={product.stock === 0} // Desabilita o botão se o estoque for 0
+                        className="w-full bg-gray-800 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-700 transition duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
                     >
-                        Add to Cart
+                        {product.stock > 0 ? 'Adicionar ao Carrinho' : 'Fora de Estoque'}
                     </button>
                 </div>
             </div>

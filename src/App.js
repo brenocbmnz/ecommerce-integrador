@@ -1,19 +1,23 @@
 import React, { useState, useMemo, useEffect } from 'react';
 
-// Layout Components
+// Componentes de Layout
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import ShoppingCart from './components/cart/ShoppingCart';
 
-// Page Components
+// Componentes de Página
 import HomePage from './components/pages/HomePage';
 import ShopPage from './components/pages/ShopPage';
 import AboutPage from './components/pages/AboutPage';
 import ContactPage from './components/pages/ContactPage';
 import ProductDetailPage from './components/pages/ProductDetailPage';
-import AdminPage from './components/pages/AdminPage'; // Importe a nova página de admin
+import AdminPage from './components/pages/AdminPage';
+import LoginPage from './components/pages/LoginPage';
+import RegisterPage from './components/pages/RegisterPage';
+import CheckoutPage from './components/pages/CheckoutPage'; // Importa a nova página
+import OrderConfirmationPage from './components/pages/OrderConfirmationPage';
 
-// UI Components
+// Componentes de UI
 import LoadingSpinner from './components/UI/LoadingSpinner';
 import ErrorMessage from './components/UI/ErrorMessage';
 
@@ -26,15 +30,13 @@ export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
+  const [lastOrder, setLastOrder] = useState(null);
 
   // --- Data Fetching ---
   useEffect(() => {
-    // Apenas busca produtos se não estivermos na página de admin,
-    // pois a página de admin busca seus próprios dados.
-    if (currentView.page !== 'admin') {
-      fetchProducts();
-    }
-  }, [currentView.page]);
+    fetchProducts();
+  }, []);
 
   const fetchProducts = async () => {
     setIsLoading(true);
@@ -47,18 +49,47 @@ export default function App() {
       setProducts(data);
     } catch (error) {
       setError(error.message);
-      // Use fallback data if fetch fails
       setProducts(require('./components/data/products').default);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // --- Cart Management Functions ---
+  // --- Funções de Autenticação ---
+  const handleLogin = (data) => {
+    setUser(data.user);
+    localStorage.setItem('token', data.token);
+    if (data.user.role === 'admin') {
+      handleNavigate('admin');
+    } else {
+      handleNavigate('home');
+    }
+  };
+
+  const handleRegister = (data) => {
+    setUser(data.user);
+    localStorage.setItem('token', data.token);
+    handleNavigate('home');
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('token');
+    handleNavigate('home');
+  };
+
+  // --- Funções do Carrinho ---
   const handleAddToCart = (product) => {
+    const itemInCart = cart.find(item => item.id === product.id);
+    const quantityInCart = itemInCart ? itemInCart.quantity : 0;
+
+    if (quantityInCart >= product.stock) {
+      alert(`Desculpe, temos apenas ${product.stock} unidades de "${product.name}" em estoque.`);
+      return;
+    }
+
     setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.id === product.id);
-      if (existingItem) {
+      if (itemInCart) {
         return prevCart.map(item =>
           item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
@@ -73,6 +104,12 @@ export default function App() {
   };
 
   const handleUpdateQuantity = (productId, newQuantity) => {
+    const product = products.find(p => p.id === productId);
+    if (newQuantity > product.stock) {
+      alert(`Desculpe, temos apenas ${product.stock} unidades em estoque.`);
+      return;
+    }
+
     if (newQuantity <= 0) {
       handleRemoveFromCart(productId);
     } else {
@@ -87,9 +124,46 @@ export default function App() {
   }, [cart]);
 
 
-  // --- View Navigation Functions ---
+  // --- Função de Compra ---
+  const handleConfirmPurchase = async () => {
+    if (!user) {
+      alert('Por favor, faça o login para finalizar a compra.');
+      handleNavigate('login');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5001/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cartItems: cart, userId: user.id })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.msg || 'Falha ao finalizar a compra.');
+      }
+
+      const orderData = await response.json();
+      setLastOrder(orderData);
+      setCart([]);
+      handleNavigate('order-confirmation');
+      fetchProducts();
+
+    } catch (err) {
+      alert(`Erro: ${err.message}`);
+    }
+  };
+
+
+  // --- Funções de Navegação ---
   const handleNavigate = (page) => {
     setCurrentView({ page, product: null });
+  };
+
+  const handleGoToCheckout = () => {
+    setIsCartOpen(false); // Fecha o carrinho
+    handleNavigate('checkout'); // Navega para a página de checkout
   };
 
   const navigateToProduct = (product) => {
@@ -100,13 +174,11 @@ export default function App() {
     setCurrentView({ page: 'shop', product: null });
   };
 
-  // --- Router Logic ---
+  // --- Lógica do Roteador ---
   const renderContent = () => {
-    // Não mostramos o spinner global para a página de admin, pois ela gerencia seu próprio estado de loading.
     if (isLoading && currentView.page !== 'admin') {
       return <LoadingSpinner />;
     }
-    // O erro só é mostrado se não houver produtos de fallback
     if (error && products.length === 0) {
       return <ErrorMessage message={error} />;
     }
@@ -123,8 +195,16 @@ export default function App() {
         return <ContactPage />;
       case 'product':
         return <ProductDetailPage product={product} onAddToCart={handleAddToCart} onBack={navigateToShop} />;
-      case 'admin': // Adicione o case para a página de admin
-        return <AdminPage />;
+      case 'login':
+        return <LoginPage onLogin={handleLogin} onNavigate={handleNavigate} />;
+      case 'register':
+        return <RegisterPage onRegister={handleRegister} onNavigate={handleNavigate} />;
+      case 'admin':
+        return user && user.role === 'admin' ? <AdminPage /> : <HomePage products={products} onAddToCart={handleAddToCart} onProductClick={navigateToProduct} />;
+      case 'checkout': // Rota para a nova página de checkout
+        return <CheckoutPage cartItems={cart} user={user} onConfirmPurchase={handleConfirmPurchase} onNavigate={handleNavigate} />;
+      case 'order-confirmation':
+        return <OrderConfirmationPage order={lastOrder} onNavigate={handleNavigate} />;
       default:
         return <HomePage products={products} onAddToCart={handleAddToCart} onProductClick={navigateToProduct} />;
     }
@@ -133,17 +213,12 @@ export default function App() {
   return (
     <div className="bg-gray-50 font-sans flex flex-col min-h-screen">
       <Header
+        user={user}
+        onLogout={handleLogout}
         cartItemCount={cartItemCount}
         onCartClick={() => setIsCartOpen(true)}
         onNavigate={handleNavigate}
       />
-      {/* Link temporário para a área de admin no topo da página */}
-      <div className="bg-yellow-200 text-center p-2">
-        <a href="#" onClick={(e) => { e.preventDefault(); handleNavigate('admin'); }} className="text-yellow-800 font-bold">
-          Acessar Painel de Administrador
-        </a>
-      </div>
-
       <main className="flex-grow">
         {renderContent()}
       </main>
@@ -153,9 +228,9 @@ export default function App() {
         cartItems={cart}
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveFromCart={handleRemoveFromCart}
+        onGoToCheckout={handleGoToCheckout} // Passa a nova função de navegação
       />
       <Footer />
     </div>
   );
 }
-
