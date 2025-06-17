@@ -1,21 +1,25 @@
 import React, { useState, useMemo, useEffect } from 'react';
 
+// Layout Components
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import ShoppingCart from './components/cart/ShoppingCart';
 
+// Page Components
 import HomePage from './components/pages/HomePage';
 import ShopPage from './components/pages/ShopPage';
 import AboutPage from './components/pages/AboutPage';
 import ContactPage from './components/pages/ContactPage';
 import ProductDetailPage from './components/pages/ProductDetailPage';
+import AdminPage from './components/pages/AdminPage'; // Importe a nova página de admin
 
+// UI Components
 import LoadingSpinner from './components/UI/LoadingSpinner';
 import ErrorMessage from './components/UI/ErrorMessage';
 
 
 export default function App() {
-
+  // --- State Management ---
   const [products, setProducts] = useState([]);
   const [cart, setCart] = useState([]);
   const [currentView, setCurrentView] = useState({ page: 'home', product: null });
@@ -23,28 +27,34 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-
+  // --- Data Fetching ---
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch('http://localhost:5001/api/products');
-        if (!response.ok) {
-          throw new Error('Data could not be fetched! Please ensure the backend server is running.');
-        }
-        const data = await response.json();
-        setProducts(data);
-      } catch (error) {
-        setError(error.message);
-        // Use fallback data if fetch fails
-        setProducts(require('./components/data/products').default);
-      } finally {
-        setIsLoading(false);
+    // Apenas busca produtos se não estivermos na página de admin,
+    // pois a página de admin busca seus próprios dados.
+    if (currentView.page !== 'admin') {
+      fetchProducts();
+    }
+  }, [currentView.page]);
+
+  const fetchProducts = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('http://localhost:5001/api/products');
+      if (!response.ok) {
+        throw new Error('Os dados não puderam ser buscados! Verifique se o backend está rodando.');
       }
-    };
+      const data = await response.json();
+      setProducts(data);
+    } catch (error) {
+      setError(error.message);
+      // Use fallback data if fetch fails
+      setProducts(require('./components/data/products').default);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    fetchProducts();
-  }, []);
-
+  // --- Cart Management Functions ---
   const handleAddToCart = (product) => {
     setCart(prevCart => {
       const existingItem = prevCart.find(item => item.id === product.id);
@@ -77,14 +87,9 @@ export default function App() {
   }, [cart]);
 
 
+  // --- View Navigation Functions ---
   const handleNavigate = (page) => {
-    console.log('App received navigation request to:', page);
-    // Force a re-render by setting loading state briefly
-    setIsLoading(true);
-    setTimeout(() => {
-      setCurrentView({ page, product: null });
-      setIsLoading(false);
-    }, 10);
+    setCurrentView({ page, product: null });
   };
 
   const navigateToProduct = (product) => {
@@ -95,17 +100,18 @@ export default function App() {
     setCurrentView({ page: 'shop', product: null });
   };
 
+  // --- Router Logic ---
   const renderContent = () => {
-    if (isLoading) {
+    // Não mostramos o spinner global para a página de admin, pois ela gerencia seu próprio estado de loading.
+    if (isLoading && currentView.page !== 'admin') {
       return <LoadingSpinner />;
     }
+    // O erro só é mostrado se não houver produtos de fallback
     if (error && products.length === 0) {
       return <ErrorMessage message={error} />;
     }
 
     const { page, product } = currentView;
-    console.log('Rendering page:', page);
-
     switch (page) {
       case 'home':
         return <HomePage products={products} onAddToCart={handleAddToCart} onProductClick={navigateToProduct} />;
@@ -116,9 +122,9 @@ export default function App() {
       case 'contact':
         return <ContactPage />;
       case 'product':
-        return product ?
-          <ProductDetailPage product={product} onAddToCart={handleAddToCart} onBack={navigateToShop} /> :
-          <ErrorMessage message="Product not found" />;
+        return <ProductDetailPage product={product} onAddToCart={handleAddToCart} onBack={navigateToShop} />;
+      case 'admin': // Adicione o case para a página de admin
+        return <AdminPage />;
       default:
         return <HomePage products={products} onAddToCart={handleAddToCart} onProductClick={navigateToProduct} />;
     }
@@ -131,6 +137,13 @@ export default function App() {
         onCartClick={() => setIsCartOpen(true)}
         onNavigate={handleNavigate}
       />
+      {/* Link temporário para a área de admin no topo da página */}
+      <div className="bg-yellow-200 text-center p-2">
+        <a href="#" onClick={(e) => { e.preventDefault(); handleNavigate('admin'); }} className="text-yellow-800 font-bold">
+          Acessar Painel de Administrador
+        </a>
+      </div>
+
       <main className="flex-grow">
         {renderContent()}
       </main>
@@ -145,3 +158,4 @@ export default function App() {
     </div>
   );
 }
+

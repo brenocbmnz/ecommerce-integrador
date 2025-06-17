@@ -1,6 +1,6 @@
 const Product = require('../models/Product');
 
-// Controller function to get all products from the database.
+// GET all products
 const getAllProducts = async (req, res) => {
     try {
         const products = await Product.find({});
@@ -11,12 +11,11 @@ const getAllProducts = async (req, res) => {
     }
 };
 
-// Controller function to get a single product by its ID.
+// GET a single product by its ID
 const getProductById = async (req, res) => {
     try {
-        const productId = parseInt(req.params.id, 10);
-        const product = await Product.findOne({ id: productId });
-
+        // Note: We are finding by the custom 'id' field, not MongoDB's '_id'
+        const product = await Product.findOne({ id: req.params.id });
         if (product) {
             res.json(product);
         } else {
@@ -27,6 +26,68 @@ const getProductById = async (req, res) => {
         res.status(500).json({ message: 'Error fetching product' });
     }
 };
+
+// CREATE a new product
+const createProduct = async (req, res) => {
+    try {
+        // Simple logic to create a new unique ID.
+        // In a large-scale application, a more robust solution like UUIDs would be better.
+        const lastProduct = await Product.findOne().sort({ id: -1 });
+        const newId = lastProduct ? lastProduct.id + 1 : 1;
+
+        const newProduct = new Product({
+            id: newId,
+            name: req.body.name,
+            category: req.body.category,
+            price: req.body.price,
+            imageUrl: req.body.imageUrl,
+            description: req.body.description,
+        });
+
+        const savedProduct = await newProduct.save();
+        res.status(201).json(savedProduct);
+    } catch (error) {
+        console.error('Error creating product:', error);
+        res.status(500).json({ message: 'Error creating product' });
+    }
+};
+
+// UPDATE an existing product by ID
+const updateProduct = async (req, res) => {
+    try {
+        const updatedProduct = await Product.findOneAndUpdate(
+            { id: req.params.id },
+            req.body,
+            { new: true } // This option returns the document after it has been updated.
+        );
+
+        if (updatedProduct) {
+            res.json(updatedProduct);
+        } else {
+            res.status(404).json({ message: 'Product not found' });
+        }
+    } catch (error) {
+        console.error('Error updating product:', error);
+        res.status(500).json({ message: 'Error updating product' });
+    }
+};
+
+// DELETE a product by ID
+const deleteProduct = async (req, res) => {
+    try {
+        const deletedProduct = await Product.findOneAndDelete({ id: req.params.id });
+
+        if (deletedProduct) {
+            res.json({ message: 'Product successfully deleted' });
+        } else {
+            res.status(404).json({ message: 'Product not found' });
+        }
+    } catch (error) {
+        console.error('Error deleting product:', error);
+        res.status(500).json({ message: 'Error deleting product' });
+    }
+};
+
 
 // Controller function to seed the database with initial data.
 const seedProducts = async (req, res) => {
@@ -51,5 +112,8 @@ const seedProducts = async (req, res) => {
 module.exports = {
     getAllProducts,
     getProductById,
+    createProduct,
+    updateProduct,
+    deleteProduct,
     seedProducts,
 };
