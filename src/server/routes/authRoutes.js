@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { register, login } = require('../controllers/authController');
+const authMiddleware = require('../middleware/authMiddleware'); // Importa o middleware
+const { register, login, getLoggedInUser } = require('../controllers/authController');
 
 // @route   POST api/auth/register
 // @desc    Registrar um usuário
@@ -11,5 +12,10 @@ router.post('/register', register);
 // @desc    Autenticar usuário & obter token
 // @access  Public
 router.post('/login', login);
+
+// @route   GET api/auth/me
+// @desc    Pega o usuário logado
+// @access  Privado (requer token)
+router.get('/me', authMiddleware, getLoggedInUser);
 
 module.exports = router;

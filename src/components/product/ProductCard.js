@@ -12,7 +12,8 @@ const ProductCard = ({ product, onAddToCart, onProductClick }) => {
                     <p className="text-gray-500 mt-1">{product.category}</p>
                 </div>
                 <div className="mt-4 flex justify-between items-center">
-                    <p className="text-xl font-bold text-gray-900">${product.price.toFixed(2)}</p>
+                    {/* MODIFICAÇÃO */}
+                    <p className="text-xl font-bold text-gray-900">R${product.price.toFixed(2)}</p>
                     <button
                         onClick={() => onAddToCart(product)}
                         className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-opacity-50"
@@ -24,6 +25,5 @@ const ProductCard = ({ product, onAddToCart, onProductClick }) => {
         </div>
     );
 };
-
 
 export default ProductCard;

@@ -25,7 +25,14 @@ import ErrorMessage from './components/UI/ErrorMessage';
 export default function App() {
   // --- State Management ---
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+    try {
+      const savedCart = localStorage.getItem('cart');
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch (error) {
+      return [];
+    }
+  });
   const [currentView, setCurrentView] = useState({ page: 'home', product: null });
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,13 +40,49 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [lastOrder, setLastOrder] = useState(null);
 
-  // --- Data Fetching ---
+  // --- Efeitos ---
   useEffect(() => {
-    fetchProducts();
+    try {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    } catch (error) {
+      console.error("Erro ao salvar o carrinho no localStorage", error);
+    }
+  }, [cart]);
+
+  useEffect(() => {
+    const loadUserFromToken = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const response = await fetch('http://localhost:5001/api/auth/me', {
+            method: 'GET',
+            headers: { 'x-auth-token': token }
+          });
+
+          if (response.ok) {
+            const userData = await response.json();
+            setUser({ id: userData._id, email: userData.email, role: userData.role });
+          } else {
+            localStorage.removeItem('token');
+          }
+        } catch (error) {
+          console.error("Erro ao carregar usuário a partir do token:", error);
+          localStorage.removeItem('token');
+        }
+      }
+    };
+
+    const initializeApp = async () => {
+      setIsLoading(true);
+      await loadUserFromToken();
+      await fetchProducts();
+      setIsLoading(false);
+    };
+
+    initializeApp();
   }, []);
 
   const fetchProducts = async () => {
-    setIsLoading(true);
     try {
       const response = await fetch('http://localhost:5001/api/products');
       if (!response.ok) {
@@ -50,12 +93,10 @@ export default function App() {
     } catch (error) {
       setError(error.message);
       setProducts(require('./components/data/products').default);
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  // --- Funções de Autenticação ---
+  // --- Funções ---
   const handleLogin = (data) => {
     setUser(data.user);
     localStorage.setItem('token', data.token);
@@ -78,7 +119,6 @@ export default function App() {
     handleNavigate('home');
   };
 
-  // --- Funções do Carrinho ---
   const handleAddToCart = (product) => {
     const itemInCart = cart.find(item => item.id === product.id);
     const quantityInCart = itemInCart ? itemInCart.quantity : 0;
@@ -123,8 +163,6 @@ export default function App() {
     return cart.reduce((sum, item) => sum + item.quantity, 0);
   }, [cart]);
 
-
-  // --- Função de Compra ---
   const handleConfirmPurchase = async () => {
     if (!user) {
       alert('Por favor, faça o login para finalizar a compra.');
@@ -155,8 +193,6 @@ export default function App() {
     }
   };
 
-
-  // --- Funções de Navegação ---
   const handleNavigate = (page) => {
     setCurrentView({ page, product: null });
   };
@@ -177,7 +213,7 @@ export default function App() {
 
   // --- Lógica do Roteador ---
   const renderContent = () => {
-    if (isLoading && currentView.page !== 'admin') {
+    if (isLoading) {
       return <LoadingSpinner />;
     }
     if (error && products.length === 0) {
@@ -187,7 +223,7 @@ export default function App() {
     const { page, product } = currentView;
     switch (page) {
       case 'home':
-        return <HomePage products={products} onAddToCart={handleAddToCart} onProductClick={navigateToProduct} />;
+        return <HomePage products={products} onAddToCart={handleAddToCart} onProductClick={navigateToProduct} onNavigate={handleNavigate} />;
       case 'shop':
         return <ShopPage products={products} onAddToCart={handleAddToCart} onProductClick={navigateToProduct} />;
       case 'about':
@@ -203,13 +239,13 @@ export default function App() {
       case 'admin':
         return user && user.role === 'admin'
           ? <AdminPage onProductsChange={fetchProducts} />
-          : <HomePage products={products} onAddToCart={handleAddToCart} onProductClick={navigateToProduct} />;
+          : <HomePage products={products} onAddToCart={handleAddToCart} onProductClick={navigateToProduct} onNavigate={handleNavigate} />;
       case 'checkout':
         return <CheckoutPage cartItems={cart} user={user} onConfirmPurchase={handleConfirmPurchase} onNavigate={handleNavigate} />;
       case 'order-confirmation':
         return <OrderConfirmationPage order={lastOrder} onNavigate={handleNavigate} />;
       default:
-        return <HomePage products={products} onAddToCart={handleAddToCart} onProductClick={navigateToProduct} />;
+        return <HomePage products={products} onAddToCart={handleAddToCart} onProductClick={navigateToProduct} onNavigate={handleNavigate} />;
     }
   };
 
@@ -233,7 +269,6 @@ export default function App() {
         onRemoveFromCart={handleRemoveFromCart}
         onGoToCheckout={handleGoToCheckout}
       />
-      {/* A função onNavigate é agora passada para o Footer */}
       <Footer onNavigate={handleNavigate} />
     </div>
   );

@@ -53,3 +53,16 @@ exports.login = async (req, res) => {
         res.status(500).send('Erro no servidor');
     }
 };
+
+
+// Função para buscar o usuário logado a partir do token
+exports.getLoggedInUser = async (req, res) => {
+    try {
+        // req.user é adicionado pelo middleware de autenticação
+        const user = await User.findById(req.user.id).select('-password');
+        res.json(user);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Erro de Servidor');
+    }
+};

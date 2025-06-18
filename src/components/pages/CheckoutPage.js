@@ -35,7 +35,7 @@ const CheckoutPage = ({ cartItems, user, onConfirmPurchase, onNavigate }) => {
                                     <p className="text-gray-500 text-sm">Quantidade: {item.quantity}</p>
                                 </div>
                             </div>
-                            <p className="font-semibold">${(item.price * item.quantity).toFixed(2)}</p>
+                            <p className="font-semibold">R${(item.price * item.quantity).toFixed(2)}</p>
                         </div>
                     ))}
                 </div>

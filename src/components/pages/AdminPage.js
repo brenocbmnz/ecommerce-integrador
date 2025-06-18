@@ -104,7 +104,7 @@ const AdminPage = ({ onProductsChange }) => {
                                 <tr key={product.id} className="border-b">
                                     <td className="p-4">{product.id}</td>
                                     <td className="p-4">{product.name}</td>
-                                    <td className="p-4">${product.price.toFixed(2)}</td>
+                                    <td className="p-4">R${product.price.toFixed(2)}</td>
                                     <td className="p-4">{product.stock}</td>
                                     <td className="p-4">
                                         <button onClick={() => handleEdit(product)} className="text-sm bg-green-500 text-white px-3 py-1 rounded-md mr-2 hover:bg-green-600">Editar</button>
