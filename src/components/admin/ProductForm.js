@@ -1,10 +1,20 @@
 import React, { useState, useEffect } from 'react';
 
+// Lista de categorias pré-definidas
+const CATEGORIES = [
+    "Acessórios",
+    "Eletrônicos",
+    "Bolsas",
+    "Vestuário",
+    "Artigos para Casa",
+    "Alimentos"
+];
+
 const ProductForm = ({ product, onSave, onCancel }) => {
     // Estado inicial do formulário agora inclui o campo 'stock'
     const [formData, setFormData] = useState({
         name: '',
-        category: '',
+        category: CATEGORIES[0], // Define um valor padrão para a categoria
         price: '',
         imageUrl: '',
         description: '',
@@ -16,8 +26,15 @@ const ProductForm = ({ product, onSave, onCancel }) => {
             // Se estiver editando, preenche o formulário com os dados do produto
             setFormData(product);
         } else {
-            // Se estiver criando, reseta o formulário com um valor padrão para o estoque
-            setFormData({ name: '', category: '', price: '', imageUrl: '', description: '', stock: '10' });
+            // Se estiver criando, reseta o formulário
+            setFormData({
+                name: '',
+                category: CATEGORIES[0],
+                price: '',
+                imageUrl: '',
+                description: '',
+                stock: '10'
+            });
         }
     }, [product]);
 
@@ -41,10 +58,20 @@ const ProductForm = ({ product, onSave, onCancel }) => {
                         <label htmlFor="name" className="block text-sm font-medium text-gray-700">Nome do Produto</label>
                         <input type="text" name="name" id="name" value={formData.name} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" required />
                     </div>
-                    {/* Campo Categoria */}
+                    {/* Campo Categoria (agora um dropdown) */}
                     <div>
                         <label htmlFor="category" className="block text-sm font-medium text-gray-700">Categoria</label>
-                        <input type="text" name="category" id="category" value={formData.category} onChange={handleChange} className="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required />
+                        <select
+                            name="category"
+                            id="category"
+                            value={formData.category}
+                            onChange={handleChange}
+                            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                        >
+                            {CATEGORIES.map(cat => (
+                                <option key={cat} value={cat}>{cat}</option>
+                            ))}
+                        </select>
                     </div>
                     {/* Campo Preço */}
                     <div>

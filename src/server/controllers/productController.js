@@ -42,7 +42,7 @@ const createProduct = async (req, res) => {
             price: req.body.price,
             imageUrl: req.body.imageUrl,
             description: req.body.description,
-            stock: req.body.stock || 10, // Add stock field with default value of 10
+            stock: req.body.stock || 10,
         });
 
         const savedProduct = await newProduct.save();
@@ -53,7 +53,6 @@ const createProduct = async (req, res) => {
     }
 };
 
-// UPDATE an existing product by ID
 const updateProduct = async (req, res) => {
     try {
         const updatedProduct = await Product.findOneAndUpdate(
@@ -73,7 +72,6 @@ const updateProduct = async (req, res) => {
     }
 };
 
-// DELETE a product by ID
 const deleteProduct = async (req, res) => {
     try {
         const deletedProduct = await Product.findOneAndDelete({ id: req.params.id });
@@ -93,24 +91,18 @@ const deleteProduct = async (req, res) => {
 
 const seedProducts = async (req, res) => {
     const initialProducts = [
-        { id: 1, name: 'Relógio de Couro', category: 'Accessories', price: 150, imageUrl: 'https://placehold.co/600x600/5a7a7a/ffffff?text=Leather+Watch', description: 'A timeless timepiece that combines classic design with modern reliability...', stock: 15 },
-        { id: 2, name: 'Modern Bluetooth Headphones', category: 'Electronics', price: 99.99, imageUrl: 'https://placehold.co/600x600/4a5568/ffffff?text=Headphones', description: 'Immerse yourself in high-fidelity sound with these sleek, comfortable Bluetooth headphones...', stock: 25 },
-        { id: 3, name: 'Minimalist Backpack', category: 'Bags', price: 75, imageUrl: 'https://placehold.co/600x600/9a8c78/ffffff?text=Backpack', description: 'Carry your essentials in style with this minimalist backpack...', stock: 20 },
-        { id: 4, name: 'Organic Cotton T-Shirt', category: 'Apparel', price: 25, imageUrl: 'https://placehold.co/600x600/a8a29e/ffffff?text=T-Shirt', description: 'Soft, breathable, and eco-friendly. This t-shirt is made from 100% organic cotton...', stock: 50 },
-        { id: 5, name: 'Stainless Steel Water Bottle', category: 'Home Goods', price: 30, imageUrl: 'https://placehold.co/600x600/78716c/ffffff?text=Bottle', description: 'Stay hydrated on the go with this double-walled, insulated stainless steel water bottle...', stock: 40 },
-        {
-            id: 6, name: 'Artisan Coffee Beans',
-            category: 'Groceries',
-            price: 22,
-            imageUrl: 'https://placehold.co/600x600/6f4e37/ffffff?text=Coffee',
-            description: 'Start your day right with our single-origin artisan coffee beans...',
-            stock: 30
-        }
+        // As categorias agora estão em português para consistência
+        { id: 1, name: 'Relógio', category: 'Acessórios', price: 150, imageUrl: 'https://placehold.co/600x600/5a7a7a/ffffff?text=Leather+Watch', description: 'A timeless timepiece that combines classic design with modern reliability...', stock: 15 },
+        { id: 2, name: 'Modern Bluetooth Headphones', category: 'Eletrônicos', price: 99.99, imageUrl: 'https://placehold.co/600x600/4a5568/ffffff?text=Headphones', description: 'Immerse yourself in high-fidelity sound with these sleek, comfortable Bluetooth headphones...', stock: 25 },
+        { id: 3, name: 'Minimalist Backpack', category: 'Bolsas', price: 75, imageUrl: 'https://placehold.co/600x600/9a8c78/ffffff?text=Backpack', description: 'Carry your essentials in style with this minimalist backpack...', stock: 20 },
+        { id: 4, name: 'Organic Cotton T-Shirt', category: 'Vestuário', price: 25, imageUrl: 'https://placehold.co/600x600/a8a29e/ffffff?text=T-Shirt', description: 'Soft, breathable, and eco-friendly. This t-shirt is made from 100% organic cotton...', stock: 50 },
+        { id: 5, name: 'Stainless Steel Water Bottle', category: 'Artigos para Casa', price: 30, imageUrl: 'https://placehold.co/600x600/78716c/ffffff?text=Bottle', description: 'Stay hydrated on the go with this double-walled, insulated stainless steel water bottle...', stock: 40 },
+        { id: 6, name: 'Artisan Coffee Beans', category: 'Alimentos', price: 22, imageUrl: 'https://placehold.co/600x600/6f4e37/ffffff?text=Coffee', description: 'Start your day right with our single-origin artisan coffee beans...', stock: 30 }
     ];
     try {
-        await Product.deleteMany({}); // Clear existing products first
+        await Product.deleteMany({}); // Limpa os produtos existentes primeiro
         await Product.insertMany(initialProducts);
-        res.status(200).send('Database has been successfully seeded with stock!');
+        res.status(200).send('Database has been successfully seeded with stock in Portuguese!');
     } catch (error) {
         console.error('Error seeding database:', error);
         res.status(500).json({ message: 'Error seeding database' });

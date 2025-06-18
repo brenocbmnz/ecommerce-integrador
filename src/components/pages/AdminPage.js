@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ProductForm from '../admin/ProductForm';
 
-// Uma API simples para encapsular as chamadas fetch
+// API para as chamadas fetch
 const api = {
     getProducts: () => fetch('http://localhost:5001/api/products').then(res => res.json()),
     createProduct: (product) => fetch('http://localhost:5001/api/products', {
@@ -19,7 +19,8 @@ const api = {
     }),
 };
 
-const AdminPage = () => {
+// A página agora recebe a propriedade onProductsChange do App.js
+const AdminPage = ({ onProductsChange }) => {
     const [products, setProducts] = useState([]);
     const [editingProduct, setEditingProduct] = useState(null);
     const [isFormVisible, setIsFormVisible] = useState(false);
@@ -28,9 +29,9 @@ const AdminPage = () => {
         loadProducts();
     }, []);
 
+    // A função loadProducts agora só é usada para carregar a lista inicial da página de admin
     const loadProducts = async () => {
         const data = await api.getProducts();
-        // Ordena os produtos por ID para uma visualização consistente
         setProducts(data.sort((a, b) => a.id - b.id));
     };
 
@@ -42,7 +43,8 @@ const AdminPage = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Tem certeza que deseja excluir este produto?')) {
             await api.deleteProduct(id);
-            loadProducts();
+            loadProducts(); // Atualiza a lista da página de admin
+            onProductsChange(); // AVISA O App.js para recarregar a lista global
         }
     };
 
@@ -52,7 +54,8 @@ const AdminPage = () => {
         } else {
             await api.createProduct(productData);
         }
-        loadProducts();
+        loadProducts(); // Atualiza a lista da página de admin
+        onProductsChange(); // AVISA O App.js para recarregar a lista global
         setIsFormVisible(false);
         setEditingProduct(null);
     };
@@ -92,7 +95,7 @@ const AdminPage = () => {
                                 <th className="p-4">ID</th>
                                 <th className="p-4">Nome</th>
                                 <th className="p-4">Preço</th>
-                                <th className="p-4">Estoque</th> {/* Coluna de estoque adicionada */}
+                                <th className="p-4">Estoque</th>
                                 <th className="p-4">Ações</th>
                             </tr>
                         </thead>
@@ -102,7 +105,7 @@ const AdminPage = () => {
                                     <td className="p-4">{product.id}</td>
                                     <td className="p-4">{product.name}</td>
                                     <td className="p-4">${product.price.toFixed(2)}</td>
-                                    <td className="p-4">{product.stock}</td> {/* Campo de estoque adicionado */}
+                                    <td className="p-4">{product.stock}</td>
                                     <td className="p-4">
                                         <button onClick={() => handleEdit(product)} className="text-sm bg-green-500 text-white px-3 py-1 rounded-md mr-2 hover:bg-green-600">Editar</button>
                                         <button onClick={() => handleDelete(product.id)} className="text-sm bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600">Excluir</button>

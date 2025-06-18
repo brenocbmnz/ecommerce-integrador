@@ -14,7 +14,7 @@ import ProductDetailPage from './components/pages/ProductDetailPage';
 import AdminPage from './components/pages/AdminPage';
 import LoginPage from './components/pages/LoginPage';
 import RegisterPage from './components/pages/RegisterPage';
-import CheckoutPage from './components/pages/CheckoutPage'; // Importa a nova página
+import CheckoutPage from './components/pages/CheckoutPage';
 import OrderConfirmationPage from './components/pages/OrderConfirmationPage';
 
 // Componentes de UI
@@ -162,8 +162,9 @@ export default function App() {
   };
 
   const handleGoToCheckout = () => {
-    setIsCartOpen(false); // Fecha o carrinho
-    handleNavigate('checkout'); // Navega para a página de checkout
+    if (cart.length === 0) return;
+    setIsCartOpen(false);
+    handleNavigate('checkout');
   };
 
   const navigateToProduct = (product) => {
@@ -200,8 +201,10 @@ export default function App() {
       case 'register':
         return <RegisterPage onRegister={handleRegister} onNavigate={handleNavigate} />;
       case 'admin':
-        return user && user.role === 'admin' ? <AdminPage /> : <HomePage products={products} onAddToCart={handleAddToCart} onProductClick={navigateToProduct} />;
-      case 'checkout': // Rota para a nova página de checkout
+        return user && user.role === 'admin'
+          ? <AdminPage onProductsChange={fetchProducts} />
+          : <HomePage products={products} onAddToCart={handleAddToCart} onProductClick={navigateToProduct} />;
+      case 'checkout':
         return <CheckoutPage cartItems={cart} user={user} onConfirmPurchase={handleConfirmPurchase} onNavigate={handleNavigate} />;
       case 'order-confirmation':
         return <OrderConfirmationPage order={lastOrder} onNavigate={handleNavigate} />;
@@ -228,7 +231,7 @@ export default function App() {
         cartItems={cart}
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveFromCart={handleRemoveFromCart}
-        onGoToCheckout={handleGoToCheckout} // Passa a nova função de navegação
+        onGoToCheckout={handleGoToCheckout}
       />
       <Footer />
     </div>

@@ -19,7 +19,7 @@ const RegisterPage = ({ onRegister, onNavigate }) => {
             if (!response.ok) {
                 throw new Error(data.msg || 'Falha no cadastro');
             }
-            onRegister(data); // Passa os dados para o App.js para logar o usuário
+            onRegister(data);
         } catch (err) {
             setError(err.message);
         }
