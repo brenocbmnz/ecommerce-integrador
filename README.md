@@ -1,70 +1,20 @@
-# Getting Started with Create React App
+🛍️ ShopSphere - E-commerce com React & Node.js📄 DescriçãoShopSphere é uma aplicação full-stack de e-commerce construída do zero, utilizando o MERN stack (MongoDB, Express, React, Node.js). O projeto simula uma loja virtual completa, desde a vitrine de produtos para clientes até um painel de administrador para gerenciamento de inventário e usuários.Este projeto foi desenvolvido como um sistema completo, demonstrando a integração entre um frontend reativo e um backend robusto com API RESTful.✨ FuncionalidadesNavegação de Usuário: Vitrine de produtos, página de detalhes, filtragem de produtos por categoria.Carrinho de Compras: Adicionar, remover e atualizar quantidade de itens, com persistência no navegador (localStorage).Sistema de Checkout: Fluxo de compra completo, com validação de estoque em tempo real e criação de pedidos no banco de dados.Autenticação de Usuários: Sistema de Login e Cadastro, com diferenciação de permissões (usuário comum vs. administrador).Gerenciamento de Sessão: O usuário permanece logado mesmo após atualizar a página (persistência com JWT).Painel de Administrador Protegido: Área acessível apenas para usuários com a permissão de 'admin'.CRUD de Produtos: Administradores podem Criar, Ler, Atualizar e Deletar produtos, incluindo o gerenciamento de estoque.🛠️ Tecnologias UtilizadasFrontend:React: Biblioteca para a construção da interface de usuário.Tailwind CSS: Framework de CSS para estilização rápida e responsiva.Backend:Node.js: Ambiente de execução para o JavaScript no servidor.Express: Framework para a construção da API RESTful.MongoDB: Banco de dados NoSQL para armazenar produtos, usuários e pedidos.Mongoose: ODM para modelar e interagir com o MongoDB.JWT (JSON Web Tokens): Para autenticação e gerenciamento de sessão.bcryptjs: Para criptografia de senhas.dotenv: Para gerenciar variáveis de ambiente.🚀 Como Executar o ProjetoPara executar este projeto localmente, você precisará de dois terminais: um para o backend (servidor) e outro para o frontend (cliente).Pré-requisitosNode.js (versão 14 ou superior)npm ou yarnUma conta no MongoDB Atlas (o plano gratuito é suficiente)1. Configurando o Backend (Servidor)# Clone o repositório
+git clone [https://github.com/seu-usuario/seu-repositorio.git](https://github.com/seu-usuario/seu-repositorio.git)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Navegue até a pasta do servidor
+cd seu-repositorio/server
 
-## Available Scripts
+# Instale as dependências
+npm install
 
-In the project directory, you can run:
+# Crie um arquivo .env na pasta 'server' e adicione sua string de conexão do MongoDB Atlas
+# e um segredo para o JWT
+MONGO_URI=mongodb+srv://<seu_usuario>:<sua_senha>@cluster...
+JWT_SECRET=seu_segredo_super_secreto_aqui
+Depois de configurar o .env, você pode iniciar o servidor:# Inicie o servidor backend
+node server.js
 
-### `npm start`
+# O servidor estará rodando em http://localhost:5001
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+# IMPORTANTE: Popule o banco de dados pela primeira vez
+# Abra seu navegador e acesse http://localhost:5001/api/seed
