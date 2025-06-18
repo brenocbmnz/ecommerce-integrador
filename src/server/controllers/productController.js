@@ -92,12 +92,12 @@ const deleteProduct = async (req, res) => {
 const seedProducts = async (req, res) => {
     const initialProducts = [
         // As categorias agora estão em português para consistência
-        { id: 1, name: 'Relógio', category: 'Acessórios', price: 150, imageUrl: 'https://placehold.co/600x600/5a7a7a/ffffff?text=Leather+Watch', description: 'A timeless timepiece that combines classic design with modern reliability...', stock: 15 },
-        { id: 2, name: 'Modern Bluetooth Headphones', category: 'Eletrônicos', price: 99.99, imageUrl: 'https://placehold.co/600x600/4a5568/ffffff?text=Headphones', description: 'Immerse yourself in high-fidelity sound with these sleek, comfortable Bluetooth headphones...', stock: 25 },
-        { id: 3, name: 'Minimalist Backpack', category: 'Bolsas', price: 75, imageUrl: 'https://placehold.co/600x600/9a8c78/ffffff?text=Backpack', description: 'Carry your essentials in style with this minimalist backpack...', stock: 20 },
-        { id: 4, name: 'Organic Cotton T-Shirt', category: 'Vestuário', price: 25, imageUrl: 'https://placehold.co/600x600/a8a29e/ffffff?text=T-Shirt', description: 'Soft, breathable, and eco-friendly. This t-shirt is made from 100% organic cotton...', stock: 50 },
-        { id: 5, name: 'Stainless Steel Water Bottle', category: 'Artigos para Casa', price: 30, imageUrl: 'https://placehold.co/600x600/78716c/ffffff?text=Bottle', description: 'Stay hydrated on the go with this double-walled, insulated stainless steel water bottle...', stock: 40 },
-        { id: 6, name: 'Artisan Coffee Beans', category: 'Alimentos', price: 22, imageUrl: 'https://placehold.co/600x600/6f4e37/ffffff?text=Coffee', description: 'Start your day right with our single-origin artisan coffee beans...', stock: 30 }
+        { id: 1, name: 'Relógio de Couro Clássico', category: 'Acessórios', price: 150, imageUrl: 'https://placehold.co/600x600/5a7a7a/ffffff?text=Relógio', description: 'Um relógio atemporal que combina design clássico com confiabilidade moderna.', stock: 15 },
+        { id: 2, name: 'Fones de Ouvido Bluetooth', category: 'Eletrônicos', price: 99.99, imageUrl: 'https://placehold.co/600x600/4a5568/ffffff?text=Fones', description: 'Mergulhe em som de alta fidelidade com estes fones de ouvido Bluetooth elegantes e confortáveis.', stock: 25 },
+        { id: 3, name: 'Mochila Minimalista', category: 'Bolsas', price: 75, imageUrl: 'https://placehold.co/600x600/9a8c78/ffffff?text=Mochila', description: 'Carregue seus itens essenciais com estilo nesta mochila minimalista.', stock: 20 },
+        { id: 4, name: 'Camiseta de Algodão Orgânico', category: 'Vestuário', price: 25, imageUrl: 'https://placehold.co/600x600/a8a29e/ffffff?text=Camiseta', description: 'Macia, respirável e ecológica. Esta camiseta é feita de 100% algodão orgânico.', stock: 50 },
+        { id: 5, name: 'Garrafa de Água Inox', category: 'Artigos para Casa', price: 30, imageUrl: 'https://placehold.co/600x600/78716c/ffffff?text=Garrafa', description: 'Mantenha-se hidratado em movimento com esta garrafa de água de aço inoxidável com parede dupla.', stock: 40 },
+        { id: 6, name: 'Grãos de Café Artesanal', category: 'Alimentos', price: 22, imageUrl: 'https://placehold.co/600x600/6f4e37/ffffff?text=Café', description: 'Comece o seu dia bem com nossos grãos de café artesanais de origem única.', stock: 30 }
     ];
     try {
         await Product.deleteMany({}); // Limpa os produtos existentes primeiro

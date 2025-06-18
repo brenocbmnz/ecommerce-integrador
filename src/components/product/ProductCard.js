@@ -17,7 +17,7 @@ const ProductCard = ({ product, onAddToCart, onProductClick }) => {
                         onClick={() => onAddToCart(product)}
                         className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-800 focus:ring-opacity-50"
                     >
-                        Add to Cart
+                        Adicionar ao Carrinho
                     </button>
                 </div>
             </div>

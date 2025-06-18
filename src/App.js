@@ -43,7 +43,7 @@ export default function App() {
     try {
       const response = await fetch('http://localhost:5001/api/products');
       if (!response.ok) {
-        throw new Error('Os dados não puderam ser buscados! Verifique se o backend está rodando.');
+        throw new Error('Os dados não puderam ser buscados! Verifique se o backend está a correr.');
       }
       const data = await response.json();
       setProducts(data);
@@ -233,7 +233,8 @@ export default function App() {
         onRemoveFromCart={handleRemoveFromCart}
         onGoToCheckout={handleGoToCheckout}
       />
-      <Footer />
+      {/* A função onNavigate é agora passada para o Footer */}
+      <Footer onNavigate={handleNavigate} />
     </div>
   );
 }

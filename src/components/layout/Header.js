@@ -8,30 +8,31 @@ const Header = ({ user, onLogout, cartItemCount, onCartClick, onNavigate }) => {
 
     return (
         <header className="bg-white shadow-md sticky top-0 z-20">
-            <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-                <div className="text-2xl font-bold text-gray-800">
-                    <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick('home'); }} className="hover:text-gray-900">
-                        ShopSphere
+            <div className="container mx-auto px-6 py-4 flex items-center">
+
+                {/* Coluna da Esquerda: Logo */}
+                <div className="flex-1">
+                    <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick('home'); }} className="text-2xl font-bold text-gray-800 hover:text-gray-900">
+                        IntegraStore
                     </a>
                 </div>
 
-                {/* Links de Navegação */}
-                <nav className="hidden md:flex items-center space-x-6">
-                    <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick('home'); }} className="text-gray-600 hover:text-gray-900">Home</a>
-                    <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick('shop'); }} className="text-gray-600 hover:text-gray-900">Shop</a>
-                    <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick('about'); }} className="text-gray-600 hover:text-gray-900">About</a>
-                    <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick('contact'); }} className="text-gray-600 hover:text-gray-900">Contact</a>
+                {/* Coluna Central: Links de Navegação */}
+                <nav className="hidden md:flex flex-1 justify-center items-center space-x-6">
+                    <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick('home'); }} className="text-gray-600 hover:text-gray-900">Início</a>
+                    <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick('shop'); }} className="text-gray-600 hover:text-gray-900">Loja</a>
+                    <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick('about'); }} className="text-gray-600 hover:text-gray-900">Sobre</a>
                 </nav>
 
-                {/* Seção de Usuário e Carrinho */}
-                <div className="flex items-center space-x-4">
+                {/* Coluna da Direita: Seção de Usuário e Carrinho */}
+                <div className="flex flex-1 justify-end items-center space-x-4">
                     {user ? (
                         <div className="flex items-center space-x-4">
                             {user.role === 'admin' && (
                                 <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick('admin'); }} className="text-sm font-medium text-blue-600 hover:text-blue-800">Painel Admin</a>
                             )}
                             <span className="text-sm text-gray-600">Olá, {user.email}</span>
-                            <button onClick={onLogout} className="text-sm text-red-600 hover:text-red-800">Logout</button>
+                            <button onClick={onLogout} className="text-sm text-red-600 hover:text-red-800">Sair</button>
                         </div>
                     ) : (
                         <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick('login'); }} className="text-gray-600 hover:text-gray-900">Login</a>
