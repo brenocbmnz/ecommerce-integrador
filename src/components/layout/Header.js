@@ -10,21 +10,22 @@ const Header = ({ user, onLogout, cartItemCount, onCartClick, onNavigate }) => {
         <header className="bg-white shadow-md sticky top-0 z-20">
             <div className="container mx-auto px-6 py-4 flex items-center">
 
-                {/* Coluna da Esquerda: Logo */}
+
                 <div className="flex-1">
-                    <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick('home'); }} className="text-2xl font-bold text-gray-800 hover:text-gray-900">
-                        IntegraStore
+                    <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick('home'); }} className="flex items-center text-gray-800 hover:text-gray-900">
+                        <img src={process.env.PUBLIC_URL + '/logo-integrastore.png'} alt="Logo da IntegraStore" className="h-8 w-8 mr-2" />
+                        <span className="text-2xl font-bold">IntegraStore</span>
                     </a>
                 </div>
 
-                {/* Coluna Central: Links de Navegação */}
+
                 <nav className="hidden md:flex flex-1 justify-center items-center space-x-6">
                     <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick('home'); }} className="text-gray-600 hover:text-gray-900">Início</a>
                     <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick('shop'); }} className="text-gray-600 hover:text-gray-900">Loja</a>
                     <a href="#" onClick={(e) => { e.preventDefault(); handleNavClick('about'); }} className="text-gray-600 hover:text-gray-900">Sobre</a>
                 </nav>
 
-                {/* Coluna da Direita: Seção de Usuário e Carrinho */}
+
                 <div className="flex flex-1 justify-end items-center space-x-4">
                     {user ? (
                         <div className="flex items-center space-x-4">
