@@ -1,4 +1,4 @@
-# 🛍️ ShopSphere - E-commerce com React & Node.js
+# 🛍️ IntegraStore - E-commerce com React & Node.js
 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
@@ -7,7 +7,7 @@
 
 ## 📄 Descrição
 
-ShopSphere é uma aplicação full-stack de e-commerce construída do zero, utilizando o MERN stack (MongoDB, Express, React, Node.js). O projeto simula uma loja virtual completa, desde a vitrine de produtos para clientes até um painel de administrador para gerenciamento de inventário e usuários.
+IntegraStore é uma aplicação full-stack de e-commerce construída do zero, utilizando o MERN stack (MongoDB, Express, React, Node.js). O projeto simula uma loja virtual completa, desde a vitrine de produtos para clientes até um painel de administrador para gerenciamento de inventário e usuários.
 
 Este projeto foi desenvolvido como um sistema completo, demonstrando a integração entre um frontend reativo e um backend robusto com API RESTful.
 
