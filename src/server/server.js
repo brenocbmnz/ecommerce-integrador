@@ -1,9 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const swaggerDocs = require('./config/swagger');
 const productRoutes = require('./routes/productRoutes');
 const authRoutes = require('./routes/authRoutes');
-const orderRoutes = require('./routes/orderRoutes');// Importar as novas rotas de pedidos
+const orderRoutes = require('./routes/orderRoutes');
 
 // Initialize Express App
 const app = express();
@@ -18,7 +19,10 @@ app.use(express.json());
 // API Routes
 app.use('/api', productRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/orders', orderRoutes); // Usar as rotas de pedidos
+app.use('/api/orders', orderRoutes);
+
+// Swagger
+swaggerDocs(app);
 
 // Root route for simple testing
 app.get('/', (req, res) => {

@@ -2,13 +2,12 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 module.exports = function (req, res, next) {
-    // Pega o token do cabeçalho da requisição
-    const token = req.header('x-auth-token');
+    const authHeader = req.header('Authorization');
 
-    // Verifica se não há token
-    if (!token) {
+    if (!authHeader) {
         return res.status(401).json({ msg: 'Sem token, autorização negada' });
     }
+    const token = authHeader.split(' ')[1];
 
     // Verifica o token
     try {
