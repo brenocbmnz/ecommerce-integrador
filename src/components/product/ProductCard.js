@@ -12,7 +12,7 @@ const ProductCard = ({ product, onAddToCart, onProductClick }) => {
                     <p className="text-gray-500 mt-1">{product.category}</p>
                 </div>
                 <div className="mt-4 flex justify-between items-center">
-                    {/* MODIFICAÇÃO */}
+                    
                     <p className="text-xl font-bold text-gray-900">R${product.price.toFixed(2)}</p>
                     <button
                         onClick={() => onAddToCart(product)}

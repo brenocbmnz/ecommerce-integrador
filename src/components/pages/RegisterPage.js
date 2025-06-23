@@ -9,7 +9,6 @@ const RegisterPage = ({ onRegister, onNavigate }) => {
         e.preventDefault();
         setError('');
         try {
-            // A role não é enviada, então o backend usará o padrão 'user'
             const response = await fetch('http://localhost:5001/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

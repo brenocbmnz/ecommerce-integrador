@@ -10,7 +10,7 @@ const AboutPage = () => {
                     Bem-vindo à IntegraStore, sua fonte número um para todas as coisas legais e inovadoras. Somos dedicados a fornecer a você o melhor dos produtos, com foco em qualidade, atendimento ao cliente e exclusividade.
                 </p>
                 <p className="text-gray-600 leading-relaxed mt-4">
-                    Este projeto é uma demonstração de um aplicativo de e-commerce construído com React, Node.js e MongoDB. Ele foi projetado para ser uma plataforma simples e intuitiva, onde você pode explorar uma variedade de produtos, adicionar itens ao carrinho e realizar pedidos de forma segura.
+                    Este projeto é uma demonstração de um aplicativo de e-commerce construído com Javascript, React, Node.js e MongoDB. Ele foi projetado para ser uma plataforma simples e intuitiva, onde você pode explorar uma variedade de produtos, adicionar itens ao carrinho e realizar pedidos de forma segura.
                 </p>
                 <p className="text-gray-600 leading-relaxed mt-4">
                     Lembrando que este projeto é apenas para fins educacionais e não está vinculado a uma loja real. Todos os produtos e informações são fictícios.

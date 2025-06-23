@@ -1,8 +1,6 @@
 import React from 'react';
 
 const ProductDetailPage = ({ product, onAddToCart, onBack }) => {
-    // A lógica de estado para a IA (aiDescription, isLoading, error) e 
-    // a função generateDescription foram removidas deste componente.
 
     return (
         <div className="container mx-auto px-6 py-12">
@@ -20,10 +18,10 @@ const ProductDetailPage = ({ product, onAddToCart, onBack }) => {
                     <div className="flex mb-4">
                         <span className="text-3xl font-bold text-gray-900">R${product.price.toFixed(2)}</span>
                     </div>
-                    {/* Exibe a descrição original do produto */}
+                    
                     <p className="text-gray-600 mb-6">{product.description}</p>
 
-                    {/* O botão para gerar descrição foi removido daqui. */}
+                    
 
                     <button
                         onClick={() => onAddToCart(product)}

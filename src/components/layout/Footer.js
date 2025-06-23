@@ -10,7 +10,6 @@ const Footer = ({ onNavigate }) => { // Recebe onNavigate do App.js
                         <p className="text-sm text-gray-400">© 2025 Todos os direitos reservados.</p>
                     </div>
                     <div className="flex space-x-6">
-                        {/* O link de Contato agora está aqui */}
                         <a href="#" onClick={(e) => { e.preventDefault(); onNavigate('contact'); }} className="text-gray-400 hover:text-white">
                             Contato
                         </a>

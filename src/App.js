@@ -56,7 +56,7 @@ export default function App() {
         try {
           const response = await fetch('http://localhost:5001/api/auth/me', {
             method: 'GET',
-            headers: { 'x-auth-token': token }
+            headers: { 'Authorization': `Bearer ${token}` }
           });
 
           if (response.ok) {
